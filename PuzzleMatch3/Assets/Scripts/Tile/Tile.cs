@@ -32,9 +32,9 @@ namespace Puzzle.Match.Tiles
         public void SetPosition(Vector3 position)
         {
             this.position = position;
-            transform.position = position;
-            // transform.DOKill();
-            // transform.DOMove(position, .5f);
+            // transform.position = position;
+            transform.DOKill();
+            transform.DOMove(position, .5f).SetEase(Ease.OutBack);
         }
 
         private void OnMouseDown()
@@ -52,7 +52,7 @@ namespace Puzzle.Match.Tiles
 
         public void DestroyTile()
         {
-            gameObject.SetActive(false);
+            transform.DOScale(0, .5f).OnComplete(() => gameObject.SetActive(false));
         }
     }
 }

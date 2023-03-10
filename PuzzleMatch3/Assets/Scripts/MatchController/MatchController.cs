@@ -47,9 +47,9 @@ namespace Puzzle.Match.Controller
             if (swipeDirection != 0)
             {
                 iGrid.SwipeTile(selectedTile, swipeDirection);
-                await Task.Delay(System.TimeSpan.FromSeconds(1));
+                await Task.Delay(System.TimeSpan.FromSeconds(.5f));
                 iGrid.DestroyMatchingTiles();
-                await Task.Delay(System.TimeSpan.FromSeconds(1));
+                await Task.Delay(System.TimeSpan.FromSeconds(.5f));
                 iGrid.AlignTiles();
             }
         }
