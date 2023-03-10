@@ -114,14 +114,45 @@ namespace Puzzle.Match.TileGrid
 
         public void DestroyMatchingTiles()
         {
+            List<ITile> matchingTiles = new();
+
             for (int x = 0; x < gridTiles.GetLength(0); x++)
             {
                 for (int y = 0; y < gridTiles.GetLength(1); y++)
                 {
-                    ITile currentTile = gridTiles[x, y];
-                    
+                    if (gridTiles[x, y] != null)
+                    {
+                        ITile currentTile = gridTiles[x, y];
+                        //horizontal match
+                        if (x < gridTiles.GetLength(0) - 2)
+                        {
+                            if (currentTile.TileNo == gridTiles[x + 1, y].TileNo && currentTile.TileNo == gridTiles[x + 2, y].TileNo)
+                            {
+                                matchingTiles.Add(gridTiles[x, y]);
+                                matchingTiles.Add(gridTiles[x + 1, y]);
+                                matchingTiles.Add(gridTiles[x + 2, y]);
+                            }
+                        }
+
+                        //Vertical match
+                        if (y < gridTiles.GetLength(1) - 2)
+                        {
+                            if (currentTile.TileNo == gridTiles[x, y + 1].TileNo && currentTile.TileNo == gridTiles[x, y + 2].TileNo)
+                            {
+                                matchingTiles.Add(gridTiles[x, y]);
+                                matchingTiles.Add(gridTiles[x, y + 1]);
+                                matchingTiles.Add(gridTiles[x, y + 2]);
+                            }
+                        }
+                    }
                 }
             }
+
+            matchingTiles.ForEach(tile =>
+            {
+                tile.DestroyTile();
+                gridTiles[tile.Index.x, tile.Index.y] = null;
+            });
         }
 
         public void AlignTiles()
