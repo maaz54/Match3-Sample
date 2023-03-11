@@ -6,8 +6,15 @@ using UnityEngine.Events;
 
 namespace Puzzle.Match.SwipeDetect
 {
+    /// <summary>
+    /// Contains the logic of swipe detection for editor and mobile device
+    /// </summary>
     public class SwipeDetector : MonoBehaviour, ISwipeDetector
     {
+        /// <summary>
+        /// use fire the swipe direction
+        /// </summary>
+        /// <returns></returns>
         public SwipeDirectionEvent OnSwipe { get; set; } = new();
         [SerializeField] private float minSwipeDistance = 50f;
         [SerializeField] private float maxSwipeTime = 1f;
@@ -25,6 +32,9 @@ namespace Puzzle.Match.SwipeDetect
 #endif
         }
 
+        /// <summary>
+        /// Use to handle Swipe detection on from Mouse position
+        /// </summary>
         private void DetectMouseSwipe()
         {
             if (Input.GetMouseButtonDown(0))
@@ -72,6 +82,9 @@ namespace Puzzle.Match.SwipeDetect
             }
         }
 
+        /// <summary>
+        /// Use to handle Swipe detection on from mobile device touch position
+        /// </summary>
         private void DetectTouchSwipe()
         {
             if (Input.touchCount > 0)

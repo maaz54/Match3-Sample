@@ -74,8 +74,6 @@ namespace Puzzle.Match.TileGrid
 
         public void GenerateTilesOnEmptyGrid()
         {
-            // Generatile tiles on Empty Index
-
             for (int x = 0; x < gridTiles.GetLength(0); x++)
             {
                 for (int y = 0; y < gridTiles.GetLength(1); y++)
@@ -109,7 +107,6 @@ namespace Puzzle.Match.TileGrid
 
         public void SwipeTile(ITile tile, SwipeDirection swipeDirection)
         {
-            Debug.Log(tile.Index.x + "," + tile.Index.y + " --- " + swipeDirection.ToString());
             int x = tile.Index.x;
             int y = tile.Index.y;
             switch (swipeDirection)
@@ -252,6 +249,9 @@ namespace Puzzle.Match.TileGrid
             }
         }
 
+        /// <summary>
+        /// return the tile position against the tile index x and y
+        /// </summary>
         private Vector3 GetPositionFromIndex(int x, int y)
         {
             return tileGridPositions[x, y];

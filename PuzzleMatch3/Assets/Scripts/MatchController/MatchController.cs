@@ -9,12 +9,18 @@ using DG.Tweening;
 namespace Puzzle.Match.Controller
 {
     /// <summary>
-    /// Handles the logic of matching tiles
+    /// Handles the tiles and grid calling 
     /// </summary>
     public class MatchController : MonoBehaviour
     {
+        //// 
         [SerializeField] private int gridSizeX;
+        //Grid size y 
         [SerializeField] private int gridSizeY;
+        /// <summary>
+        /// Tiles Grid
+        /// use to handle tiles listners like when use select tiles
+        /// </summary>
         private ITile[,] gridTiles;
         private IGrid iGrid;
         ISwipeDetector swipeDetector;
@@ -35,6 +41,9 @@ namespace Puzzle.Match.Controller
             TilesListner();
         }
 
+        /// <summary>
+        /// Adding tiles listner when use click on tiles
+        /// </summary>
         private void TilesListner()
         {
             foreach (var tile in gridTiles)
@@ -44,11 +53,18 @@ namespace Puzzle.Match.Controller
             }
         }
 
+        /// <summary>
+        /// calls when user click on a tile
+        /// </summary>
+        /// <param name="selectedTile"></param>
         private void OnTileClicked(ITile selectedTile)
         {
             swipeDetector.OnSwipe.AddListener((dir) => _ = OnSwipeTile(dir, selectedTile));
         }
 
+        /// <summary>
+        /// when user swipe while clicking tile
+        /// </summary>
         private async Task OnSwipeTile(SwipeDirection swipeDirection, ITile selectedTile)
         {
             swipeDetector.OnSwipe.RemoveAllListeners();
