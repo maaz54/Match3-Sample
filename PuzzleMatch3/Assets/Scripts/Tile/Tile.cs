@@ -31,8 +31,11 @@ namespace Puzzle.Match.Tiles
 
         public void SetPosition(Vector3 position)
         {
+            if (this.position == default)
+            {
+                transform.position = new Vector3(position.x, position.y + 10, position.z);
+            }
             this.position = position;
-            // transform.position = position;
             transform.DOKill();
             transform.DOMove(position, .5f).SetEase(Ease.OutBack);
         }

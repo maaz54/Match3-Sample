@@ -19,6 +19,8 @@ namespace Puzzle.Match.Controller
         private IGrid iGrid;
         ISwipeDetector swipeDetector;
 
+        bool canSwipeTile = true;
+
         [Inject]
         private void Constructor(IGrid iGrid, ISwipeDetector swipeDetector)
         {
@@ -30,8 +32,14 @@ namespace Puzzle.Match.Controller
         private void Init()
         {
             gridTiles = iGrid.GenerateTiles(gridSizeX, gridSizeY);
+            TilesListner();
+        }
+
+        private void TilesListner()
+        {
             foreach (var tile in gridTiles)
             {
+                tile.OnTileSelect.RemoveListener(OnTileClicked);
                 tile.OnTileSelect.AddListener(OnTileClicked);
             }
         }
@@ -44,13 +52,31 @@ namespace Puzzle.Match.Controller
         private async Task OnSwipeTile(SwipeDirection swipeDirection, ITile selectedTile)
         {
             swipeDetector.OnSwipe.RemoveAllListeners();
-            if (swipeDirection != 0)
+            if (swipeDirection != 0 && canSwipeTile)
             {
+                canSwipeTile = false;
                 iGrid.SwipeTile(selectedTile, swipeDirection);
                 await Task.Delay(System.TimeSpan.FromSeconds(.5f));
+                await RemoveAndAlignTiles();
+            }
+
+            async Task RemoveAndAlignTiles()
+            {
                 iGrid.DestroyMatchingTiles();
                 await Task.Delay(System.TimeSpan.FromSeconds(.5f));
                 iGrid.AlignTiles();
+                await Task.Delay(System.TimeSpan.FromSeconds(.5f));
+                if (iGrid.IsTileMatched)
+                {
+                    _ = RemoveAndAlignTiles();
+                }
+                else
+                {
+                    iGrid.GenerateTilesOnEmptyGrid();
+                    await Task.Delay(System.TimeSpan.FromSeconds(.5f));
+                    TilesListner();
+                    canSwipeTile = true;
+                }
             }
         }
     }
