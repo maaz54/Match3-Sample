@@ -12,10 +12,12 @@ namespace Puzzle.Match.Installer
     {
         [SerializeField] private TilesGrid grid;
         [SerializeField] private SwipeDetector swipeDetector;
+        [SerializeField] private ObjectPooler objectPooler;
         public override void InstallBindings()
         {
             Container.Bind<IGrid>().FromInstance(grid).AsSingle();
             Container.Bind<ISwipeDetector>().FromInstance(swipeDetector).AsSingle();
+            Container.Bind<IObjectPooler>().FromInstance(objectPooler).AsSingle();
         }
     }
 }
