@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Puzzle.Match.Interface
         // setting tile position
         public void SetPosition(Vector3 position);
         // destroying tile
-        public void DestroyTile();
+        public void DestroyTile(Action onDestroyed);
     }
 
     public class TileIndex

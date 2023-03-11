@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Zenject;
 
 namespace Puzzle.Match.TileGrid
 {
@@ -36,6 +37,13 @@ namespace Puzzle.Match.TileGrid
         /// return true when tiles where just detroyed and doesnt align yet
         /// </summary>
         public bool IsTileMatched => isTileMatched;
+        IObjectPooler objectPooler;
+
+        [Inject]
+        private void Constructor(IObjectPooler objectPooler)
+        {
+            this.objectPooler = objectPooler;
+        }
 
         /// <summary>
         /// Generating tiles
@@ -91,7 +99,8 @@ namespace Puzzle.Match.TileGrid
             {
                 currentTileNo = random.Next(1, tilePrefabe.Length + 1);
             }
-            return Instantiate(Array.Find(tilePrefabe, i => i.TileNo == currentTileNo), transform);
+
+            return objectPooler.Pool<Tile>(Array.Find(tilePrefabe, i => i.TileNo == currentTileNo), transform);
         }
 
         /// <summary>
@@ -251,7 +260,8 @@ namespace Puzzle.Match.TileGrid
             isTileMatched = matchingTiles.Count >= 3;
             matchingTiles.ForEach(tile =>
             {
-                tile.DestroyTile();
+                void OnTileDestroyed() => objectPooler.Remove((Tile)tile);
+                tile.DestroyTile(OnTileDestroyed);
                 gridTiles[tile.Index.x, tile.Index.y] = null;
             });
         }

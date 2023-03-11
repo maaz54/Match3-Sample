@@ -1,12 +1,13 @@
 using DG.Tweening;
 using Puzzle.Match.Interface;
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Puzzle.Match.Tiles
 {
-    public class Tile : MonoBehaviour, ITile
+    public class Tile : MonoBehaviour, ITile, IPoolableObject
     {
         /// <summary>
         /// handle the callback when use click on tile
@@ -31,6 +32,14 @@ namespace Puzzle.Match.Tiles
         /// tile transfrom
         /// </summary>
         public Transform Transform => transform;
+
+        public int ObjectID => tileNo;
+
+        /// <summary>
+        /// use to get how many times position is assigned
+        /// </summary>
+        private int positionSetCounter = 0;
+
         /// <summary>
         /// setting tile index
         /// </summary>
@@ -44,13 +53,14 @@ namespace Puzzle.Match.Tiles
         /// </summary>
         public void SetPosition(Vector3 position)
         {
-            if (this.position == default)
+            if (positionSetCounter == 0)
             {
                 transform.position = new Vector3(position.x, position.y + 10, position.z);
             }
             this.position = position;
             transform.DOKill();
             transform.DOMove(position, .5f).SetEase(Ease.OutBack);
+            positionSetCounter++;
         }
 
         /// <summary>
@@ -71,9 +81,15 @@ namespace Puzzle.Match.Tiles
         /// <summary>
         /// destroying tile
         /// </summary>
-        public void DestroyTile()
+        public void DestroyTile(Action onDestroyed)
         {
-            transform.DOScale(0, .5f).OnComplete(() => gameObject.SetActive(false));
+            positionSetCounter = 0;
+            transform.DOKill();
+            transform.DOScale(0, .5f).OnComplete(() =>
+            {
+                transform.localScale = Vector3.one;
+                onDestroyed?.Invoke();
+            });
         }
     }
 }
