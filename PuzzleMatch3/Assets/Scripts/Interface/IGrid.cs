@@ -17,7 +17,21 @@ namespace Puzzle.Match.Interface
         /// </summary>
         /// <param name="tile"></param>
         void SwipeTile(ITile tile, SwipeDirection swipeDirection);
+        /// <summary>
+        /// Destroying the matched tiles 
+        /// </summary>
         void DestroyMatchingTiles();
+        /// <summary>
+        /// Aligning tiles position after destroying tile
+        /// </summary>
         void AlignTiles();
+        /// <summary>
+        /// Regeneratiing tiles on empty grid
+        /// </summary>
+        void GenerateTilesOnEmptyGrid();
+        /// <summary>
+        /// return true when tiles where just detroyed and doesnt align yet
+        /// </summary>
+        bool IsTileMatched { get; }
     }
 }
