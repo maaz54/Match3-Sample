@@ -10,7 +10,7 @@ namespace Puzzle.Match.Installer
 {
     public class Installer : MonoInstaller<Installer>
     {
-        [SerializeField] private TileGrid.TilesGrid grid;
+        [SerializeField] private TilesGrid grid;
         [SerializeField] private SwipeDetector swipeDetector;
         public override void InstallBindings()
         {

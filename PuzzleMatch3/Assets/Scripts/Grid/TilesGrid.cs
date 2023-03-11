@@ -14,14 +14,32 @@ namespace Puzzle.Match.TileGrid
     /// </summary>
     public class TilesGrid : MonoBehaviour, IGrid
     {
+        /// <summary>
+        /// Tiles prefabes use to instantiate on runtime
+        /// </summary>
         [SerializeField] private Tile[] tilePrefabe;
+        /// <summary>
+        /// distance between gride of tiles 
+        /// </summary>
         [SerializeField] private float tilesOffset;
+        /// <summary>
+        /// Tiles gride
+        /// </summary>
         private ITile[,] gridTiles;
-        [SerializeField] private Vector3[,] tileGridPositions;
+        /// <summary>
+        /// Holding tile positon of grid
+        /// </summary>
+        private Vector3[,] tileGridPositions;
 
         private bool isTileMatched = false;
+        /// <summary>
+        /// return true when tiles where just detroyed and doesnt align yet
+        /// </summary>
         public bool IsTileMatched => isTileMatched;
 
+        /// <summary>
+        /// Generating tiles
+        /// </summary>
         public ITile[,] GenerateTiles(int xLength, int yLength)
         {
             gridTiles = new ITile[xLength, yLength];
@@ -60,6 +78,10 @@ namespace Puzzle.Match.TileGrid
             return gridTiles;
         }
 
+        /// <summary>
+        /// returning random tiles
+        /// returning different tiles from previouse horizontal and vertical tile
+        /// </summary>
         private ITile GenerateRandomTile(int? prevHorizontalTileNo, int? prevVerticalTileNo)
         {
             System.Random random = new();
@@ -72,6 +94,9 @@ namespace Puzzle.Match.TileGrid
             return Instantiate(Array.Find(tilePrefabe, i => i.TileNo == currentTileNo), transform);
         }
 
+        /// <summary>
+        /// Generating on the empty grid
+        /// </summary>
         public void GenerateTilesOnEmptyGrid()
         {
             for (int x = 0; x < gridTiles.GetLength(0); x++)
@@ -105,6 +130,10 @@ namespace Puzzle.Match.TileGrid
             }
         }
 
+        /// <summary>
+        /// calls when user swipe the tile
+        /// swapping the tiles according to the swipe Direction
+        /// </summary>
         public void SwipeTile(ITile tile, SwipeDirection swipeDirection)
         {
             int x = tile.Index.x;
@@ -174,6 +203,9 @@ namespace Puzzle.Match.TileGrid
             }
         }
 
+        /// <summary>
+        /// Destroying the matched tiles 
+        /// </summary>
         public void DestroyMatchingTiles()
         {
             List<ITile> matchingTiles = new();
@@ -224,6 +256,9 @@ namespace Puzzle.Match.TileGrid
             });
         }
 
+        /// <summary>
+        /// alignin the tiles filling the empty grid from top to bottom
+        /// </summary>
         public void AlignTiles()
         {
             for (int x = 0; x < gridTiles.GetLength(0); x++)
