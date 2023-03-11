@@ -19,5 +19,7 @@ namespace Puzzle.Match.Interface
         void SwipeTile(ITile tile, SwipeDirection swipeDirection);
         void DestroyMatchingTiles();
         void AlignTiles();
+        void GenerateTilesOnEmptyGrid();
+        bool IsTileMatched { get; }
     }
 }

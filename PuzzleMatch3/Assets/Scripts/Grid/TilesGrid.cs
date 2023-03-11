@@ -19,15 +19,16 @@ namespace Puzzle.Match.TileGrid
         private ITile[,] gridTiles;
         [SerializeField] private Vector3[,] tileGridPositions;
 
+        private bool isTileMatched = false;
+        public bool IsTileMatched => isTileMatched;
+
         public ITile[,] GenerateTiles(int xLength, int yLength)
         {
             gridTiles = new ITile[xLength, yLength];
             tileGridPositions = new Vector3[xLength, yLength];
             Vector3 position = new(-xLength / 2, -yLength / 2, 0);
-            // int prevHorizontalTileNo = 0;
             for (int x = 0; x < xLength; x++)
             {
-                // int prevVerticalTileNo = 0;
                 for (int y = 0; y < yLength; y++)
                 {
                     ITile tile;
@@ -71,11 +72,44 @@ namespace Puzzle.Match.TileGrid
             return Instantiate(Array.Find(tilePrefabe, i => i.TileNo == currentTileNo), transform);
         }
 
+        public void GenerateTilesOnEmptyGrid()
+        {
+            // Generatile tiles on Empty Index
 
-
+            for (int x = 0; x < gridTiles.GetLength(0); x++)
+            {
+                for (int y = 0; y < gridTiles.GetLength(1); y++)
+                {
+                    if (gridTiles[x, y] == null)
+                    {
+                        ITile tile;
+                        if (x == 0 && y == 0)
+                        {
+                            tile = GenerateRandomTile(null, null);
+                        }
+                        else if (x == 0)
+                        {
+                            tile = GenerateRandomTile(null, gridTiles[x, y - 1].TileNo);
+                        }
+                        else if (y == 0)
+                        {
+                            tile = GenerateRandomTile(gridTiles[x - 1, y].TileNo, null);
+                        }
+                        else
+                        {
+                            tile = GenerateRandomTile(gridTiles[x - 1, y].TileNo, gridTiles[x, y - 1].TileNo);
+                        }
+                        tile.SetIndex(new TileIndex(x, y));
+                        tile.SetPosition(GetPositionFromIndex(x, y));
+                        gridTiles[x, y] = tile;
+                    }
+                }
+            }
+        }
 
         public void SwipeTile(ITile tile, SwipeDirection swipeDirection)
         {
+            Debug.Log(tile.Index.x + "," + tile.Index.y + " --- " + swipeDirection.ToString());
             int x = tile.Index.x;
             int y = tile.Index.y;
             switch (swipeDirection)
@@ -185,6 +219,7 @@ namespace Puzzle.Match.TileGrid
                 }
             }
 
+            isTileMatched = matchingTiles.Count >= 3;
             matchingTiles.ForEach(tile =>
             {
                 tile.DestroyTile();
